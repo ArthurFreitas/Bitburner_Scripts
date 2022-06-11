@@ -9,7 +9,9 @@ export async function main(ns) {
 		await tryToSpread(ns, neighbours[i]);
 	}
 
-	ns.spawn("worm/runner.js", 1, host)
+	if(host != "home"){
+		ns.spawn("worm/runner.js", 1, host)
+	}
 }
 
 async function tryToSpread(ns, neighbour) {
@@ -30,7 +32,7 @@ function canNuke(ns, neighbour) {
 }
 
 function shouldSpread(ns, neighbour) {
-	return !ns.fileExists(neighbour + ".txt", "hosts");
+	return !ns.fileExists(neighbour + ".txt", "hosts") && neighbour != "home";
 }
 
 async function spread(ns, neighbour) {
@@ -38,5 +40,5 @@ async function spread(ns, neighbour) {
 	var initFile = "init.js";
 
 	await ns.scp(initFile, "production", neighbour);
-	ns.exec(initFile, neighbour, 1, neighbour);
+	ns.exec(initFile, "home", 1, neighbour);
 }
