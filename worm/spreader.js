@@ -2,15 +2,15 @@ let hackeablePorts = 4;
 
 /** @param {NS} ns */
 export async function main(ns) {
-	var host = ns.args[0]
-	var neighbours = ns.scan();
+	var host = ns.args[0];
+	var neighbours = ns.scan(host);
 
 	for (var i = 0; i < neighbours.length; i++) {
 		await tryToSpread(ns, neighbours[i]);
 	}
 
 	if(host != "home"){
-		ns.spawn("worm/runner.js", 1, host)
+		ns.spawn("worm/runner.js", 1, host);
 	}
 }
 
@@ -32,7 +32,7 @@ function canNuke(ns, neighbour) {
 }
 
 function shouldSpread(ns, neighbour) {
-	return !ns.fileExists(neighbour + ".txt", "hosts") && neighbour != "home";
+	return !ns.fileExists("/hosts/" + neighbour + ".txt", "home") && neighbour != "home";
 }
 
 async function spread(ns, neighbour) {

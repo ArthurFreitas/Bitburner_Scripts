@@ -1,11 +1,11 @@
 /** @param {NS} ns */
 export async function main(ns) {
 	var target = ns.args[0];
-	var targetfile = target + ".txt";
+	var targetfile = "/hosts/" + target + ".txt";
 	var targetMoney = ns.getServerMoneyAvailable(target);
 
 	await ns.write(targetfile, targetMoney);
-	await ns.scp(targetfile, "hosts");
+	await ns.scp(targetfile, "home");
 	ns.rm(targetfile, target);
 
 	if(targetMoney > 0){
