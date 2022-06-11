@@ -1,11 +1,17 @@
 /** @param {NS} ns */
 export async function main(ns) {
 	var target = ns.args[0];
-	await ns.write(target + ".txt", target);
-	await ns.scp(target + ".txt", "hosts");
+	var targetfile = target + ".txt";
+	var targetMoney = ns.getServerMoneyAvailable(target);
 
-	var maxRam = ns.getServerMaxRam(target);
-	var neededRam = ns.getScriptRam("/worm/miner.js", "production");
-	var maxThreads = Math.floor(maxRam/neededRam);
-	ns.spawn("worm/miner.js", maxThreads, target);
+	await ns.write(targetfile, targetMoney);
+	await ns.scp(targetfile, "hosts");
+	ns.rm(targetfile, target);
+
+	if(targetMoney > 0){
+		var maxRam = ns.getServerMaxRam(target);
+		var neededRam = ns.getScriptRam("/worm/miner.js", "production");
+		var maxThreads = Math.floor(maxRam/neededRam);
+		ns.spawn("worm/miner.js", maxThreads, target);
+	}
 }
